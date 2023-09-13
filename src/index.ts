@@ -1,5 +1,8 @@
-import * as core from '@actions/core'
-import { wait } from './wait'
+import * as core from '@actions/core';
+import { exec } from '@actions/exec';
+import * as artifact from '@actions/artifact'
+import * as os from 'os'
+import * as path from 'path'
 
 /**
  * The main function for the action.
@@ -7,18 +10,24 @@ import { wait } from './wait'
  */
 export async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
+    // install compiler log
+    let installArgs = ['tool', 'install', '--global', 'Basic.CompilerLog', '--add-source', 'https://api.nuget.org/v3/index.json'];
 
-    // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
-    core.debug(`Waiting ${ms} milliseconds ...`)
+    console.log("Installing Basic.CompilerLog");
+    let exitCode = await exec('dotnet', installArgs, { ignoreReturnCode: true });
+    if (exitCode > 1) {
+      throw new Error("dotnet tool install failed.");
+    }
 
-    // Log the current timestamp, wait, then log the new timestamp
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    // add .dotnet/tools to the path
+    core.addPath(path.join(os.homedir(), '.dotnet', 'tools'));
 
-    // Set outputs for other workflow steps to use
-    core.setOutput('time', new Date().toTimeString())
+    await exec('complog', ['create', '--out', 'build.complog'])
+
+
+    console.log("Publishing the artifact");
+    let client = artifact.create();
+    await client.uploadArtifact("build.complog", ['build.complog'], '.');
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)

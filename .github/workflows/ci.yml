@@ -49,12 +49,14 @@ jobs:
         id: checkout
         uses: actions/checkout@v4
 
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Build .NET console app
+        run: dotnet build __tests__/projects/console -bl
+
       - name: Test Local Action
         id: test-action
         uses: ./
-        with:
-          milliseconds: 1000
-
-      - name: Print Output
-        id: output
-        run: echo "${{ steps.test-action.outputs.time }}"
