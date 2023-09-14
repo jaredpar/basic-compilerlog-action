@@ -10889,6 +10889,7 @@ async function runCompilerLog() {
     if (isNullOrEmpty(output)) {
         output = 'build.complog';
     }
+    console.log('Using ${output}');
     args.push(output);
     await (0, exec_1.exec)('complog', args);
     return output;

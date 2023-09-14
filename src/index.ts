@@ -52,6 +52,7 @@ async function runCompilerLog(): Promise<string> {
     output = 'build.complog'
   }
 
+  console.log('Using ${output}')
   args.push(output)
 
   await exec('complog', args)
