@@ -12,7 +12,7 @@ export async function run(): Promise<void> {
   try {
     console.log('Here')
     // install compiler log
-    let installArgs = [
+    const installArgs = [
       'tool',
       'install',
       '--global',
@@ -22,7 +22,10 @@ export async function run(): Promise<void> {
     ]
 
     console.log('Installing Basic.CompilerLog')
-    let exitCode = await exec('dotnet', installArgs, { ignoreReturnCode: true })
+    const exitCode = await exec('dotnet', installArgs, {
+      ignoreReturnCode: true
+    })
+
     if (exitCode > 1) {
       throw new Error('dotnet tool install failed.')
     }
@@ -33,7 +36,7 @@ export async function run(): Promise<void> {
     await exec('complog', ['create', '--out', 'build.complog'])
 
     console.log('Publishing the artifact')
-    let client = artifact.create()
+    const client = artifact.create()
     await client.uploadArtifact('build.complog', ['build.complog'], '.')
   } catch (error) {
     // Fail the workflow run if an error occurs
