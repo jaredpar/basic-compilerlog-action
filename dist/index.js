@@ -10890,7 +10890,7 @@ async function runCompilerLog() {
         output = 'build.complog';
     }
     args.push(output);
-    let binlog = core.getInput('binlog');
+    const binlog = core.getInput('binlog');
     if (!isNullOrEmpty(binlog)) {
         args.push(binlog);
     }
