@@ -67,5 +67,6 @@ jobs:
         id: test-action2
         uses: ./
         with: 
+            binlog: 'msbuild.binlog'
             complog: 'build2.complog'
             artifact: 'simple.comlog'
