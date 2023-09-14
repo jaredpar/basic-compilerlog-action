@@ -57,6 +57,15 @@ jobs:
       - name: Build .NET console app
         run: dotnet build __tests__/projects/console -bl
 
-      - name: Test Local Action
-        id: test-action
+      - name: 'Test: simple'
+        id: test-action1
         uses: ./
+        with: 
+            artifact: 'simple.comlog'
+
+      - name: 'Test: simple2'
+        id: test-action2
+        uses: ./
+        with: 
+            complog: 'build2.complog'
+            artifact: 'simple.comlog'

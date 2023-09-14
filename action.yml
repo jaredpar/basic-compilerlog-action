@@ -1,18 +1,22 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Compiler Log Action'
+description: 'Generates and uploads compiler logs for the build'
+author: 'jaredpar'
 
-# Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Your input description here'
-    required: true
-    default: '1000'
+  binlog:
+    description: 'Path to the binary log' 
+    required: false
+    default: ''
+  complog:
+    description: 'Name of the compiler log to create'
+    required: false
+    default: 'build.complog'
+  artifact:
+    description: 'Name of the artifact to upload'
+    required: false
+    default: 'build.complog'
 
-# Define your outputs here.
 outputs:
-  time:
-    description: 'Your output description here'
 
 runs:
   using: node20

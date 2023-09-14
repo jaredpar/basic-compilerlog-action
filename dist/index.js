@@ -10852,27 +10852,11 @@ const path = __importStar(__nccwpck_require__(1017));
  */
 async function run() {
     try {
-        console.log('Here');
-        // install compiler log
-        let installArgs = [
-            'tool',
-            'install',
-            '--global',
-            'Basic.CompilerLog',
-            '--add-source',
-            'https://api.nuget.org/v3/index.json'
-        ];
-        console.log('Installing Basic.CompilerLog');
-        let exitCode = await (0, exec_1.exec)('dotnet', installArgs, { ignoreReturnCode: true });
-        if (exitCode > 1) {
-            throw new Error('dotnet tool install failed.');
-        }
+        await installCompilerLog();
         // add .dotnet/tools to the path
         core.addPath(path.join(os.homedir(), '.dotnet', 'tools'));
-        await (0, exec_1.exec)('complog', ['create', '--out', 'build.complog']);
-        console.log('Publishing the artifact');
-        let client = artifact.create();
-        await client.uploadArtifact('build.complog', ['build.complog'], '.');
+        const complogFile = await runCompilerLog();
+        await publishCompilerLog(complogFile);
     }
     catch (error) {
         // Fail the workflow run if an error occurs
@@ -10881,6 +10865,46 @@ async function run() {
     }
 }
 exports.run = run;
+async function installCompilerLog() {
+    // install compiler log
+    const installArgs = [
+        'tool',
+        'install',
+        '--global',
+        'Basic.CompilerLog',
+        '--add-source',
+        'https://api.nuget.org/v3/index.json'
+    ];
+    console.log('Installing Basic.CompilerLog');
+    const exitCode = await (0, exec_1.exec)('dotnet', installArgs, {
+        ignoreReturnCode: true
+    });
+    if (exitCode > 1) {
+        throw new Error('dotnet tool install failed.');
+    }
+}
+async function runCompilerLog() {
+    const args = ['create', '--out'];
+    let output = core.getInput('complog');
+    if (isNullOrEmpty(output)) {
+        output = 'build.complog';
+    }
+    args.push(output);
+    await (0, exec_1.exec)('complog', args);
+    return output;
+}
+async function publishCompilerLog(complogFile) {
+    console.log('Publishing the artifact');
+    let name = core.getInput('artifact');
+    if (isNullOrEmpty(name)) {
+        name = 'build.complog';
+    }
+    const client = artifact.create();
+    await client.uploadArtifact(name, [complogFile], '.');
+}
+function isNullOrEmpty(str) {
+    return str === null || str === '';
+}
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 run();
 
