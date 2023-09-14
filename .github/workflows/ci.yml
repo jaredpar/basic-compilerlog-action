@@ -49,12 +49,24 @@ jobs:
         id: checkout
         uses: actions/checkout@v4
 
-      - name: Test Local Action
-        id: test-action
-        uses: ./
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
         with:
-          milliseconds: 1000
+          dotnet-version: 7.0.x
 
-      - name: Print Output
-        id: output
-        run: echo "${{ steps.test-action.outputs.time }}"
+      - name: Build .NET console app
+        run: dotnet build __tests__/projects/console -bl
+
+      - name: 'Test: simple'
+        id: test-action1
+        uses: ./
+        with: 
+            artifact: 'simple.complog'
+
+      - name: 'Test: simple2'
+        id: test-action2
+        uses: ./
+        with: 
+            binlog: 'msbuild.binlog'
+            complog: 'build2.complog'
+            artifact: 'simple.complog'
