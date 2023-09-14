@@ -10889,8 +10889,11 @@ async function runCompilerLog() {
     if (isNullOrEmpty(output)) {
         output = 'build.complog';
     }
-    console.log(`Using ${output}`);
     args.push(output);
+    let binlog = core.getInput('binlog');
+    if (!isNullOrEmpty(binlog)) {
+        args.push(binlog);
+    }
     await (0, exec_1.exec)('complog', args);
     return output;
 }
