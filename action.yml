@@ -16,8 +16,6 @@ inputs:
     required: false
     default: 'build.complog'
 
-outputs:
-
 runs:
   using: node20
   main: dist/index.js
