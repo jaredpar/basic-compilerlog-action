@@ -61,7 +61,7 @@ jobs:
         id: test-action1
         uses: ./
         with: 
-            artifact: 'simple.comlog'
+            artifact: 'simple.complog'
 
       - name: 'Test: simple2'
         id: test-action2
@@ -69,4 +69,4 @@ jobs:
         with: 
             binlog: 'msbuild.binlog'
             complog: 'build2.complog'
-            artifact: 'simple.comlog'
+            artifact: 'simple.complog'

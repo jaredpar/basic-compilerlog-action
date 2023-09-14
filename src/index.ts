@@ -52,8 +52,12 @@ async function runCompilerLog(): Promise<string> {
     output = 'build.complog'
   }
 
-  console.log(`Using ${output}`)
   args.push(output)
+
+  let binlog = core.getInput('binlog')
+  if (!isNullOrEmpty(binlog)) {
+    args.push(binlog)
+  }
 
   await exec('complog', args)
   return output
