@@ -29,7 +29,7 @@ async function installCompilerLog(): Promise<void> {
     'tool',
     'install',
     '--global',
-    'Basic.CompilerLog',
+    'complog',
     '--add-source',
     'https://api.nuget.org/v3/index.json'
   ]
